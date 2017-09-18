@@ -1,0 +1,22 @@
+<launch>
+  <remap from="/cmg_test/fw_speeds" to="/flywheel_driver/speeds" />
+  <remap from="/cmg_test/gb_speeds" to="/gimbal_driver/target" />
+  <node name="cmg_test" pkg="cmg_tests" type="node" output="screen">
+  </node>
+  <node name="flywheel_driver" pkg="flywheel_driver" type="node" output="screen">
+    <param name="flywheel_speed_a" value="0" />
+    <param name="flywheel_speed_b" value="1" />
+    <param name="flywheel_speed_c" value="0" />
+    <param name="flywheel_min_speed" value="40" />
+    <param name="flywheel_max_speed" value="4096" />
+    <param name="flywheel_zero_signal" value="205" />
+    <param name="pwm_freq" value="50" />
+  </node> 
+  <node name="gimbal_driver" pkg="gimbal_driver" type="node" output="screen">
+	<rosparam param="gimbal_ids">[1]</rosparam>
+	<rosparam param="gimbal_dev">/dev/ttyUSB0</rosparam>
+	<rosparam param="gimbal_baud">57600</rosparam>
+	<rosparam param="gimbal_protocol_version">2.0</rosparam>
+	<rosparam param="gimbal_pub_freq">1</rosparam>
+  </node>
+</launch>
