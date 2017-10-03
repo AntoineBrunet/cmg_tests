@@ -13,6 +13,15 @@ int main(int argc, char ** argv) {
 
 	ros::Publisher fw_pub = n.advertise<cmg_msgs::SpeedList>("fw_speeds",1);
 	ros::Publisher gb_pub = n.advertise<cmg_msgs::GimbalTarget>("gb_speeds",1);
+		
+	cmg_msgs::SpeedList fw_cmd;
+	for (int i = fw_min; i <= fw_max; i++) {
+		cmg_msgs::Speed spd;
+		spd.id = i;
+		spd.speed = 205;
+		fw_cmd.speeds.push_back(spd);
+	}
+	fw_pub.publish(fw_cmd);
 	
 	while (ros::ok()) {
 		std::string s;
@@ -21,12 +30,8 @@ int main(int argc, char ** argv) {
 			return 0;
 		}
 		std::cout << "Starting flywheel" << std::endl;
-		cmg_msgs::SpeedList fw_cmd;
-		for (int i = fw_min; i <= fw_max; i++) {
-			cmg_msgs::Speed spd;
-			spd.id = i;
-			spd.speed = 315;
-			fw_cmd.speeds.push_back(spd);
+		for (int i = 0; i <= fw_max-fw_min; i++) {
+			fw_cmd.speeds[i].speed = 350;
 		}
 		fw_pub.publish(fw_cmd);
 		ros::Duration(1).sleep();
@@ -44,7 +49,7 @@ int main(int argc, char ** argv) {
 		ros::Duration(1).sleep();
 		std::cout << "Stopping flywheel" << std::endl;
 		for (int i = 0; i <= fw_max-fw_min; i++) {
-			fw_cmd.speeds[i].speed = 0;
+			fw_cmd.speeds[i].speed = 205;
 		}
 		fw_pub.publish(fw_cmd);
 	}
