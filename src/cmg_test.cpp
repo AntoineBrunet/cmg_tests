@@ -22,6 +22,12 @@ int main(int argc, char ** argv) {
 		fw_cmd.speeds.push_back(spd);
 	}
 	fw_pub.publish(fw_cmd);
+
+	cmg_msgs::GimbalTarget gb_cmd;
+	for (int i = 0; i <= fw_max-fw_min; i++) {
+		gb_cmd.positions.push_back(0.0);
+	}
+	gb_cmd.mode = 1;
 	
 	while (ros::ok()) {
 		std::string s;
@@ -36,15 +42,17 @@ int main(int argc, char ** argv) {
 		fw_pub.publish(fw_cmd);
 		ros::Duration(1).sleep();
 		std::cout << "Starting gimbal" << std::endl;
-		cmg_msgs::GimbalTarget gb_cmd;
-		gb_cmd.positions.push_back(1.0);
-		gb_cmd.mode = 1;
+		for (int i = 0; i <= fw_max-fw_min; i++) {
+			gb_cmd.positions[i] = 1.0;
+		}
 		gb_pub.publish(gb_cmd);
 		std::cout << "Waiting for " << time << " seconds" << std::endl;
 		ros::Duration(time).sleep();
 
 		std::cout << "Stopping gimbal" << std::endl;
-		gb_cmd.positions[0] = 0.0;
+		for (int i = 0; i <= fw_max-fw_min; i++) {
+			gb_cmd.positions[i] = 0.0;
+		}
 		gb_pub.publish(gb_cmd);
 		ros::Duration(1).sleep();
 		std::cout << "Stopping flywheel" << std::endl;
